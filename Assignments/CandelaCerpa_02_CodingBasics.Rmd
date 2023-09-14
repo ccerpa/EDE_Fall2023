@@ -41,7 +41,8 @@ print(Greater)
 ```
 4.  Insert comments in your code to describe what you are doing.
 ```{r basics 1}
-#1. I assigned the sequence a name and applied the sequence function, noting the value by which to increase
+#1. I assigned the sequence a name and applied the sequence function,
+#noting the value by which to increase
 #Print shows me the function's result
 
 #2. I assigned each measure a name and applied the corresponding function
@@ -93,7 +94,7 @@ TestCalc2 <- function(x){
 
 ```
 11. Apply your function to the vector with test scores that you created in number 5.
-```{r basics 3}
+```{r basics 3, error=TRUE}
 TestCalc1(TestScore)
 TestCalc2(TestScore)
 ```
