@@ -82,38 +82,22 @@ colnames(CourseName)<-c("Name","Score","Passed")
 
 10. Create a function with an if/else statement. Your function should take a **vector** of test scores and print (not return) whether a given test score is a passing grade of 50 or above (TRUE or FALSE). You will need to choose either the `if` and `else` statements or the `ifelse` statement. 
 ```{r}
+
 TestCalc1 <- function(x){
-  
-   for (e in x){
-     if (e >= 50) {print(TRUE) } else {print(FALSE)}
-   }
-    
-}
+      ifelse(x >= 50, "TRUE", "FALSE")
+  }
 
 TestCalc2 <- function(x){
-  
-  for (e in x){
-    ifelse(e >= 50, print(TRUE), print(FALSE))
+     if (x >= 50) {print("TRUE") } else {print("FALSE")}
   }
-  
-}
-
-TestCalc3 <- function(x){
-      ifelse(x >= 50, print(TRUE), print(FALSE))
-  }
-
-TestCalc4 <- function(x){
-     if (x >= 50) {print(TRUE) } else {print(FALSE)}
-   }
 
 ```
 11. Apply your function to the vector with test scores that you created in number 5.
 ```{r basics 3}
 TestCalc1(TestScore)
 TestCalc2(TestScore)
-TestCalc3(TestScore)
-TestCalc4(TestScore)
 ```
 
 12. QUESTION: Which option of `if` and `else` vs. `ifelse` worked? Why?
-> Answer: if/else would fail without a for loop because it can't apply a logical .
+> Answer: if...else doesn't work because it returns values the same shape as the test, which as a boolean only allows for a length of one. Ifelse works because it's the vectorized alternative to if..else, designed to test a vector of booleans and returning a vector of the same length. However, a for loop applied to the if...else function could work.
+#
