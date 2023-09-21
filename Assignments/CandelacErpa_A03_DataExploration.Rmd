@@ -32,12 +32,14 @@ This exercise accompanies the lessons in Environmental Data Analytics on Data Ex
 
 1.  Check your working directory, load necessary packages (tidyverse, lubridate), and upload two data sets: the ECOTOX neonicotinoid data set (ECOTOX_Neonicotinoids_Insects_raw.csv) and the Niwot Ridge NEON data set for litter and woody debris (NEON_NIWO_Litter_massdata_2018-08_raw.csv). Name these data sets "Neonics" and "Litter", respectively. Be sure to include the subcommand to read strings in as factors.
 
-```{r check wd, loading packages and importing data}
+```{r check-wd-load-packages-import-data, echo=TRUE}
 getwd() #checking working directory
 library(tidyverse) #loading necessary package
 library(lubridate) #loading necessary package
-Neonics <- read.csv("./Data/Raw/ECOTOX_Neonicotinoids_Insects_raw.csv") #importing data with a relative path, naming it
-Litter <- read.csv("./Data/Raw/NEON_NIWO_Litter_massdata_2018-08_raw.csv") #importing data with a relative path, naming it
+Neonics <- read.csv("./Data/Raw/ECOTOX_Neonicotinoids_Insects_raw.csv") #import
+#data with a relative path, naming it
+Litter <- read.csv("./Data/Raw/NEON_NIWO_Litter_massdata_2018-08_raw.csv") #import
+#data with a relative path, naming it
 ```
 
 ## Learn about your system
@@ -68,8 +70,10 @@ dim(Litter) # 4623 rows, 30 columns
 
 6.  Using the `summary` function on the "Effect" column, determine the most common effects that are studied. Why might these effects specifically be of interest?
 
-```{r summary of the effect column with as.factor}
-Neonics$Effect <- as.factor(Neonics$Effect) #convert the character values in the column into factors. This allows us to quantify character values, particularly when they have a fixed and known set of possible values
+```{r summary-effect-column}
+Neonics$Effect <- as.factor(Neonics$Effect) #convert the character values in the
+#column into factors. This allows us to quantify character values, particularly
+#when they have a fixed and known set of possible values
 summary(Neonics$Effect) #summarizes the column to find the most common values
 sort(summary(Neonics$Effect), decreasing = TRUE)
 ```
@@ -78,9 +82,13 @@ sort(summary(Neonics$Effect), decreasing = TRUE)
 
 7.  Using the `summary` function, determine the six most commonly studied species in the data set (common name). What do these species have in common, and why might they be of interest over other insects? Feel free to do a brief internet search for more information if needed.[TIP: The `sort()` command can sort the output of the summary command...]
 
-```{r summary of the Species Common Name column and top 6}
-Neonics$Species.Common.Name <- as.factor(Neonics$Species.Common.Name) #convert the character values in the column into factors. This allows us to quantify character values, particularly when they have a fixed and known set of possible values
-summary(Neonics$Species.Common.Name) #summarizes the column to find the most common values
+```{r summary-Species-Common-Name-column}
+Neonics$Species.Common.Name <- as.factor(Neonics$Species.Common.Name) #convert
+#the character values in the column into factors. This allows us to quantify
+#character values, particularly when they have a fixed and known set of possible
+#values
+summary(Neonics$Species.Common.Name) #summarizes the column to find the most
+#common values
 sort(summary(Neonics$Species.Common.Name), decreasing = TRUE)
 ```
 
@@ -88,7 +96,7 @@ sort(summary(Neonics$Species.Common.Name), decreasing = TRUE)
 
 8.  Concentrations are always a numeric value. What is the class of `Conc.1..Author.` column in the data set, and why is it not numeric?
 
-```{r class of Conc.1..Author.}
+```{r class-Conc.1..Author.}
 class(Neonics$Conc.1..Author.)
 ```
 
@@ -98,16 +106,21 @@ class(Neonics$Conc.1..Author.)
 
 9.  Using `geom_freqpoly`, generate a plot of the number of studies conducted by publication year.
 
-```{r line frequency of studies by publication year}
+```{r line-frequency-studies-publication-year}
 ggplot(Neonics) +
-  geom_freqpoly(aes(x = Publication.Year), bins = 40, color = "purple", size = 1.5) #I graphed the specific column, increased the number of bins to see subtler trends over the years (40 is the difference between 2020 and 1980), and changed the line color and size to make it more visible.
+  geom_freqpoly(aes(x = Publication.Year), bins = 40, color = "purple", size = 1.5)
+#I graphed the specific column, increased the number of bins to see subtler
+#trends over the years (40 is the difference between 2020 and 1980), and changed
+#the line color and size to make it more visible.
 ```
 
 10. Reproduce the same graph but now add a color aesthetic so that different Test.Location are displayed as different colors.
 
-```{r line frequency of studies by publication year and by test location type}
+```{r line-frequenc-studies-publication-year-test-location-type}
 ggplot(Neonics) +
-  geom_freqpoly(aes(x = Publication.Year, color = Test.Location), bins = 40, size = 1.5) #I kept the same basic graph but added the color determinant to be the elements in TestLocation to create 4 separate lines
+  geom_freqpoly(aes(x = Publication.Year, color = Test.Location), bins = 40, size = 1.5)
+#I kept the same basic graph but added the color determinant to be the elements
+#in TestLocation to create 4 separate lines
 ```
 
 Interpret this graph. What are the most common test locations, and do they differ over time?
@@ -118,10 +131,11 @@ Interpret this graph. What are the most common test locations, and do they diffe
 
 [**TIP**: Add `theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))` to the end of your plot command to rotate and align the X-axis labels...]
 
-```{r bar graph of Endpoint counts}
+```{r bar-graph-Endpoint-counts}
 ggplot(Neonics) + 
   geom_bar(aes(x = Endpoint)) + 
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) #rotates and aligns the x-axis labels
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) #rotates
+#and aligns the x-axis labels
 ```
 
 > Answer: The two most common end points are NOEL and LOEL. NOEL is No-Observable-Effect-Level, whereused to note the highest concentration producing effects that aren't significantly different from control responses. LOEL is Lowest-Observable-Effect-Level, used to note the lowest concentration producing effects that are significantly different from controls.
@@ -130,18 +144,19 @@ ggplot(Neonics) +
 
 12. Determine the class of collectDate. Is it a date? If not, change to a date and confirm the new class of the variable. Using the `unique` function, determine which dates litter was sampled in August 2018.
 
-```{r determine and update the date column and count the dates when sampling occured}
+```{r determine-update-date-column}
 class(Litter$collectDate) #check the class of the column; it is currently character
-Litter$collectDate <- as.Date(Litter$collectDate) #Transform the column into a Date format
+Litter$collectDate <- as.Date(Litter$collectDate) #Transform column to Date format
 class(Litter$collectDate) #confirm the new class of the Collect Date column
-unique(Litter$collectDate) #determines in what dates litter was sampled in August 2018
+unique(Litter$collectDate) #determine when litter was sampled in Aug 2018
 ```
 
 13. Using the `unique` function, determine how many plots were sampled at Niwot Ridge. How is the information obtained from `unique` different from that obtained from `summary`?
 
-```{r unique vs summary }
+```{r unique-vs-summary}
 unique(Litter$siteID)
-Litter$siteID <- as.factor(Litter$siteID) #change it to factor as before to make it possible to count them in summary
+Litter$siteID <- as.factor(Litter$siteID) #change it to factor as before to make
+#it possible to count them in summary
 summary(Litter$siteID)
 ```
 
@@ -149,14 +164,14 @@ summary(Litter$siteID)
 
 14. Create a bar graph of functionalGroup counts. This shows you what type of litter is collected at the Niwot Ridge sites. Notice that litter types are fairly equally distributed across the Niwot Ridge sites.
 
-```{r bar graph for Functional Group}
+```{r bar-graph-Functional-Group}
 ggplot(Litter) + 
   geom_bar(aes(x = functionalGroup))
 ```
 
 15. Using `geom_boxplot` and `geom_violin`, create a box plot and a violin plot of dryMass by functionalGroup.
 
-```{r box plot vs violin plot for Dry Mass by Functional Group}
+```{r box-plot-vs-violin-plot-Dry-Mass-Functional-Group}
 ggplot(Litter) +
   geom_boxplot(aes(x = dryMass, y = functionalGroup))
   
