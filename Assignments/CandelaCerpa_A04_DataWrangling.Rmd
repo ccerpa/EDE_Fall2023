@@ -76,17 +76,28 @@ EPAair_O3_19$Date <-mdy(EPAair_O3_19$Date)
 EPAair_PM25_18$Date <-mdy(EPAair_PM25_18$Date)
 EPAair_PM25_19$Date <-mdy(EPAair_PM25_19$Date)
 
-#4 select columns: Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE
-O3_18 <- EPAair_O3_18 %>% select(Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE)
-O3_19 <- EPAair_O3_19 %>% select(Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE)
-PM25_18 <- EPAair_PM25_18 %>% select(Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE)
-PM25_19 <- EPAair_PM25_19 %>% select(Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE)
+#4 select columns: Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC,
+#COUNTY, SITE_LATITUDE, SITE_LONGITUDE
+O3_18 <- EPAair_O3_18 %>% select(Date, DAILY_AQI_VALUE, Site.Name,
+                                 AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE,
+                                 SITE_LONGITUDE)
+O3_19 <- EPAair_O3_19 %>% select(Date, DAILY_AQI_VALUE, Site.Name,
+                                 AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE,
+                                 SITE_LONGITUDE)
+PM25_18 <- EPAair_PM25_18 %>% select(Date, DAILY_AQI_VALUE, Site.Name,
+                                     AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE,
+                                     SITE_LONGITUDE)
+PM25_19 <- EPAair_PM25_19 %>% select(Date, DAILY_AQI_VALUE, Site.Name,
+                                     AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE,
+                                     SITE_LONGITUDE)
 
-#5 For the PM2.5 datasets, fill all cells in AQS_PARAMETER_DESC with "PM2.5" (all cells in this column should be identical).
+#5 For the PM2.5 datasets, fill all cells in AQS_PARAMETER_DESC with "PM2.5"
+#(all cells in this column should be identical).
 PM25_18$AQS_PARAMETER_DESC <- "PM2.5"
 PM25_19$AQS_PARAMETER_DESC <- "PM2.5"
 
-#6 Save all four processed datasets in the Processed folder. Use the same file names as the raw files but replace "raw" with "processed".
+#6 Save all four processed datasets in the Processed folder. Use the same file
+#names as the raw files but replace "raw" with "processed".
 write.csv(O3_18, "./Data/Processed/EPAair_O3_NC2018_processed.csv")
 write.csv(O3_19, "./Data/Processed/EPAair_O3_NC2019_processed.csv")
 write.csv(PM25_18, "./Data/Processed/EPAair_PM25_18_processed.csv")
@@ -114,8 +125,8 @@ write.csv(PM25_19, "./Data/Processed/EPAair_PM25_19_processed.csv")
 11. Save your processed dataset with the following file name: "EPAair_O3_PM25_NC1819_Processed.csv"
 
 ```{r}
-#7 Combine the datasets with 'rbind'. Make sure your column names are identical prior to running this code
-#ensure column names are identical
+#7 Combine the datasets with 'rbind'. Make sure your column names are identical
+#prior to running this code ensure column names are identical.
 colnames(O3_18)
 colnames(O3_19)
 colnames(PM25_18)
@@ -124,23 +135,28 @@ EPAair_O3_PM25 <- rbind(O3_18, O3_19, PM25_18, PM25_19)
 
 #8 wrangle the datasets
 wrangled_EPAair_O3_PM25 <- EPAair_O3_PM25 %>%
-  filter(Site.Name %in% c("Linville Falls", "Durham Armory", "Leggett", "Hattie Avenue", "Clemmons Middle", "Mendenhall School", "Frying Pan Mountain", "West Johnston Co.", "Garinger High School", "Castle Hayne", "Pitt Agri. Center", "Bryson City", "Millbrook School")) %>%
+  filter(Site.Name %in% c("Linville Falls", "Durham Armory", "Leggett",
+                          "Hattie Avenue", "Clemmons Middle", "Mendenhall School",
+                          "Frying Pan Mountain", "West Johnston Co.",
+                          "Garinger High School", "Castle Hayne", "Pitt Agri. Center",
+                          "Bryson City", "Millbrook School")) %>%
   group_by(Date, Site.Name, AQS_PARAMETER_DESC, COUNTY) %>%
-  summary(meanAQI = mean(DAILY_AQI_VALUE),
+  summarise(meanAQI = mean(DAILY_AQI_VALUE),
           meanLAT = mean(SITE_LATITUDE),
           meanLOG = mean(SITE_LONGITUDE)) %>%
-  mutate(Month = month(Date), #why doesn't this work!!
+  mutate(Month = month(Date),
          Year = year(Date))
 
-#9 spread datasets so AQI values for ozone and PM2.5 are in separate columns. Each location on a specific date should now occupy only one row.
-wrangled_EPAair_O3_PM25 %>%
-  pivot_wider(names_from = "O3", values_from = AQS_PARAMETER_DESC)
+#9 spread datasets so AQI values for ozone and PM2.5 are in separate columns
+spread_EPAair_O3_PM25 <- pivot_wider (wrangled_EPAair_O3_PM25,
+                                      names_from = AQS_PARAMETER_DESC,
+                                      values_from = meanAQI)
 
-#10 tidy dataset dimension (should be 14,752 x 9)
-dim(wrangled_EPAair_O3_PM25)
+#10 tidy dataset dimension
+dim(spread_EPAair_O3_PM25)
 
 #11 save tidy dataset 
-write.csv(wrangled_EPAair_O3_PM25, "./Data/Processed/EPAair_O3_PM25_NC1819_Processed.csv")
+write.csv(spread_EPAair_O3_PM25, "./Data/Processed/EPAair_O3_PM25_NC1819_Processed.csv")
 ```
 
 ## Generate summary tables
@@ -151,19 +167,24 @@ write.csv(wrangled_EPAair_O3_PM25, "./Data/Processed/EPAair_O3_PM25_NC1819_Proce
 
 ```{r}
 
-#12
-summary_EPAair_O3_PM25 <- wrangled_EPAair_O3_PM25 %>%
+#12 With split-apply-combine, summarize the dataframe. Group data by site,
+#month, and year. Find mean AQI values for ozone and PM2.5 for each group.
+#Remove na from O3. 
+summary_EPAair_O3_PM25 <- spread_EPAair_O3_PM25 %>%
   group_by(Site.Name, Month, Year) %>%
-  summary(meanO3 = mean(O3),
-          meanPM25 = mean(PM25)) %>%
+  summarise(meanO3 = mean(Ozone),
+          meanPM2.5 = mean(PM2.5)) %>%
   drop_na(meanO3)
 
-#13
+#13 Show dimensions of the summary dataset
 dim(summary_EPAair_O3_PM25)
-
 
 ```
 
 14. Why did we use the function `drop_na` rather than `na.omit`?
 
-> Answer: 
+> Answer: na.omit would just exclude the values from the specific calculation,
+whereas drop_na removes the recordings from the dataframe alltogether.If, for
+our project, we care mainly about ozone values, it makes sense to remove
+recordings that don't add to our
+project.
