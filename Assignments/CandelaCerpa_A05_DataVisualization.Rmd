@@ -1,6 +1,6 @@
 ---
 title: "Assignment 5: Data Visualization"
-author: "Student Name"
+author: "Candela Cerpa"
 date: "Fall 2023"
 output: pdf_document
 geometry: margin=2.54cm
@@ -31,11 +31,25 @@ This exercise accompanies the lessons in Environmental Data Analytics on Data Vi
 2. Make sure R is reading dates as date format; if not change the format to date.
 
 ```{r initialize project}
-#1 
+#1 load packages, verify directory, read it data
+#install.packages("cowplot")
+library(tidyverse);library(lubridate);library(here);library(cowplot);library(ggthemes)
+getwd()
 
-#2 
+NTL_LTER <- read.csv("./Data/Processed_KEY/NTL-LTER_Lake_Chemistry_Nutrients_PeterPaul_Processed.csv", stringsAsFactors = TRUE)
+NEON_NIWO <- read.csv("./Data/Processed_KEY/NEON_NIWO_Litter_mass_trap_processed.csv", stringsAsFactors = TRUE)
 
+#2 check date formats and adapt
+print(class(NTL_LTER$sampledate)) #read as factor
+print(class(NEON_NIWO$collectDate)) #read as factor
+
+NTL_LTER$sampledate <- ymd(NTL_LTER$sampledate)
+NEON_NIWO$collectDate <- ymd(NEON_NIWO$collectDate)
+
+print(class(NTL_LTER$sampledate)) #read as date
+print(class(NEON_NIWO$collectDate)) #read as date
 ```
+
 ## Define your theme
 3. Build a theme and set it as your default theme. Customize the look of at least two of the following: 
  * Plot background
@@ -45,8 +59,24 @@ This exercise accompanies the lessons in Environmental Data Analytics on Data Vi
  * Legend
 
 ```{r build plot theme}
-#3
-
+#3 Create a custom theme
+my_theme <- theme_base() +
+  theme(
+    line = element_line(
+      linewidth = 2
+      ),
+    plot.title = element_text(
+      color = "darkgreen"
+      ),
+    axis.ticks = element_line(
+      color = "darkgreen"
+      ),
+    plot.background = element_rect(
+      color = "black",
+      fill = "grey"
+      ),
+    complete = TRUE
+    )
 ```
 
 ## Create graphs
@@ -55,7 +85,7 @@ For numbers 4-7, create ggplot graphs and adjust aesthetics to follow best pract
 4. [NTL-LTER] Plot total phosphorus (`tp_ug`) by phosphate (`po4`), with separate aesthetics for Peter and Paul lakes. Add a line of best fit and color it black. Adjust your axes to hide extreme values (hint: change the limits using `xlim()` and/or `ylim()`).
 
 ```{r plot total P vs PO4}
-#4 
+#4 NLT-LTER tp_ug by po4. separate aesthetics for Peter & Paul Lakes
 
 ```
 
@@ -67,7 +97,15 @@ Tip:
 * R has a built-in variable called `month.abb` that returns a list of months;see <https://r-lang.com/month-abb-in-r-with-example>
 
 ```{r Create boxplots}
-#5 
+#5a boxplot for temp (month on x axis, lake as a color aesthetic)
+o5a_plot <- ggplot(NTL_LTER) +
+  geom_boxplot(aes(x= month, y = temperature_C))
+print(o5a_plot)
+#5b boxplot for TP (month on x axis, lake as a color aesthetic)
+
+#5c boxplot for TN (month on x axis, lake as a color aesthetic)
+
+#5d cowplot that combines the 3
 
 ```
 
