@@ -28,13 +28,11 @@ Using markdown, create a table beneath the `Table: EPA Air Quality` line below t
 
 Table: EPA Air Quality
 
-```{r table}
-Item <- c("Source", "Date", "Filename")
-Value <- c("EPA Air Quality System (AQS)", "2018-2019",
-           "EPAair_O3_PM25_NC1819_Processed.csv")
-EAQ_metadata <- data.frame(Item, Value) #create dataframe with table values
-knitr::kable(EAQ_metadata, caption = "EPA Air Quality", align = "rl")
-```
+|        Item|Value                                  |
+|-----------:|:--------------------------------------|
+|     Source | EPA Air Quality System (AQS)          |
+|       Date | 2018-2019                             |
+|  File Name | EPAair_O3_PM25_NC1819_Processed.csv   |
 
 ---
 
